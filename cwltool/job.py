@@ -419,7 +419,8 @@ class DockerCommandLineJob(JobBase):
             docker_windows_path_adjust(os.path.realpath(self.outdir)),
             self.builder.outdir))
         runtime.append(u"--volume=%s:%s:rw" % (
-            docker_windows_path_adjust(os.path.realpath(self.tmpdir)), "/tmp"))
+            docker_windows_path_adjust(os.path.realpath(self.tmpdir)),
+            self.builder.tmpdir))
 
         self.add_volumes(self.pathmapper, runtime)
         if self.generatemapper:
@@ -456,7 +457,7 @@ class DockerCommandLineJob(JobBase):
         if rm_container:
             runtime.append(u"--rm")
 
-        runtime.append(u"--env=TMPDIR=/tmp")
+        runtime.append(u"--env=TMPDIR=%s" % self.builder.tmpdir)
 
         # spec currently says "HOME must be set to the designated output
         # directory." but spec might change to designated temp directory.
